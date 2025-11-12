@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,17 +9,28 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public int currentLevel = 1;
     public int numberOfTiles;
+    public int nextTileDist;
     public List<GameObject> clearedArrows = new List<GameObject>();
 
     // Private
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject winPanelUI;
+    [SerializeField] private GameObject congratulationPanelUI;
     [SerializeField] private TextMeshProUGUI winTxt;
     [SerializeField] private GameObject losePanelUI;
     [SerializeField] private TextMeshProUGUI timerTxt;
+    [SerializeField] private InterstitialAds interstitialAds;
+    [SerializeField] private BannerAds bannerAds;
+    [SerializeField] private List<GameObject> levelTileSet = new List<GameObject>();
+    
+
+    private SceneManagerScript sceneManagerScript;
     private float remainingTime;
     private bool timerStatus = true;
-    [SerializeField] private List<GameObject> levelTileSet = new List<GameObject>();
+    private Color orangeColor;
+    private GameObject arrowGameObj;
+    private Image arrowImg;
+    private List<GameObject> childObjects = new List<GameObject>();
 
     private void Awake()
     {
@@ -34,6 +46,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetLevelDetails();
+        bannerAds.ShowBannerAd();
+        sceneManagerScript = GetComponent<SceneManagerScript>();
+        ColorUtility.TryParseHtmlString("#FB8500", out orangeColor);
     }
 
     private void Update()
@@ -52,11 +67,13 @@ public class GameManager : MonoBehaviour
             case 1: 
                 numberOfTiles = 15;
                 remainingTime = 20;
+                nextTileDist = 185;
                 SetTimerInUI();
                 break;
             case 2: 
-                numberOfTiles = 16;
-                remainingTime = 10;
+                numberOfTiles = 34;
+                remainingTime = 30;
+                nextTileDist = 125;
                 SetTimerInUI();
                 break;
             case 3: 
@@ -126,6 +143,7 @@ public class GameManager : MonoBehaviour
         SetLevelDetails();
         levelTileSet[currentLevel - 1].SetActive(true);
         ClearUI();
+        timerStatus = true;
     }
 
     public void RetryLevel()
@@ -137,6 +155,24 @@ public class GameManager : MonoBehaviour
                 arrow.gameObject.SetActive(true);
             }
         }
+        
+        childObjects.Clear();
+
+        foreach (Transform child in levelTileSet[currentLevel - 1].transform)
+        {
+            childObjects.Add(child.gameObject);
+        }
+
+        foreach(GameObject arrow in childObjects)
+        {
+            arrowGameObj = arrow.transform.GetChild(0).gameObject;
+
+            if (arrowGameObj.activeSelf)
+            {
+                arrowImg = arrowGameObj.GetComponent<Image>();
+                arrowImg.color = orangeColor;
+            }
+        }
 
         clearedArrows.Clear();
 
@@ -145,6 +181,9 @@ public class GameManager : MonoBehaviour
         SetLevelDetails();
         
         timerStatus = true;
+
+        // Unfreeze (resume normal speed)
+        Time.timeScale = 1f;
     }
 
     public void PauseMenu()
@@ -168,10 +207,29 @@ public class GameManager : MonoBehaviour
         winTxt.text = "Lv." + currentLevel.ToString() + " Clear";
         winPanelUI.SetActive(true);
         timerStatus = false;
+        interstitialAds.ShowAd();
     }
 
     public void LosePanel()
     {
         losePanelUI.SetActive(true);
+        timerStatus = false;
+    }
+
+    public void CongratulationPanel()
+    {
+        congratulationPanelUI.SetActive(true);
+        timerStatus = false;
+        interstitialAds.ShowAd();
+    }
+
+    public void HomeScr()
+    {
+        if (bannerAds.bannerAdsStatus == true)
+        {
+            bannerAds.HideBannerAd();
+        }
+
+        sceneManagerScript.HomeScene();
     }
 }

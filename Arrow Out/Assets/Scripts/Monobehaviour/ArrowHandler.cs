@@ -10,8 +10,6 @@ public class ArrowHandler : MonoBehaviour
 
     private Vector3 arrowTilePosition;
     private float arrowTileRotationZ;
-    private float nextTileCheckPos;
-    private float nextTilePos;
 
     private Image arrowImg;
 
@@ -33,25 +31,25 @@ public class ArrowHandler : MonoBehaviour
         {
             // LEFT
             Debug.Log("Left");
-            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x - 185, arrowTilePosition.y, arrowTilePosition.z));
+            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x - gameManager.nextTileDist, arrowTilePosition.y, arrowTilePosition.z));
         }
         else if (arrowTileRotationZ > 0.70)
         {
             // UP
             Debug.Log("Up");
-            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x, arrowTilePosition.y + 185, arrowTilePosition.z));
+            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x, arrowTilePosition.y + gameManager.nextTileDist, arrowTilePosition.z));
         }
         else if (arrowTileRotationZ == 0)
         {
             // RIGHT
             Debug.Log("right");
-            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x + 185, arrowTilePosition.y, arrowTilePosition.z));
+            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x + gameManager.nextTileDist, arrowTilePosition.y, arrowTilePosition.z));
         }
         else if (arrowTileRotationZ < 0)
         {
             // DOWN
             Debug.Log("Down");
-            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x, arrowTilePosition.y - 185, arrowTilePosition.z));
+            RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x, arrowTilePosition.y - gameManager.nextTileDist, arrowTilePosition.z));
         }
 
         // Debug.Log(arrowTilePosition);
@@ -84,8 +82,7 @@ public class ArrowHandler : MonoBehaviour
                 arrowImg = arrowTile.GetComponent<Image>();
                 arrowImg.color = Color.red;
             }
-        }
-        
+        }  
     }
 
     private void ClearArrow(GameObject currentArrowTile)
@@ -98,10 +95,17 @@ public class ArrowHandler : MonoBehaviour
 
         Debug.Log(gameManager.numberOfTiles);
 
-        if (gameManager.numberOfTiles == 0 )
+        if (gameManager.numberOfTiles == 0)
         {
-            gameManager.WinPanel();
+            if (gameManager.currentLevel == 5)
+            {
+                gameManager.CongratulationPanel();
+            } else
+            {
+                gameManager.WinPanel();
+            }
         }
     }
-
 }
+
+
