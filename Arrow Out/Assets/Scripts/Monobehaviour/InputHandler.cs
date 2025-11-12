@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -8,13 +7,15 @@ public class InputHandler : MonoBehaviour
 {
     // Public
     public InputActionAsset inputActions;
-
+    
 
     // Private
     private InputAction touchPressAction;
+    private ArrowHandler arrowHandler;
 
     private void Awake()
     {
+        arrowHandler = GetComponent<ArrowHandler>();
         touchPressAction = inputActions.FindActionMap("TouchActionMap").FindAction("Touch");
     }
 
@@ -32,22 +33,33 @@ public class InputHandler : MonoBehaviour
 
     private void OnTouchPress(InputAction.CallbackContext context)
     {
-        // Get the touch position
-        Vector2 touchPosition = Pointer.current.position.ReadValue();
+        Vector2 touchPosition = context.ReadValue<Vector2>();
 
-        // Create a PointerEventData to use with the EvenSystem
-        PointerEventData eventData = new PointerEventData(EventSystem.current);
-        eventData.position = touchPosition;
-
-        // Raycast against UI Elements
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventData, results);
-
-        // Process the results
-        foreach (RaycastResult result in results)
+        // Create a PointerEventData for UI raycast
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
-            Debug.Log("Touched UI GameObjects" + result.gameObject.transform.name);
+            position = touchPosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        if (results.Count > 0)
+        {
+            // Get the first UI GameObject hit
+            GameObject touchedUI = results[0].gameObject;
+            // Debug.Log($"Touched UI: {touchedUI.name}");
+            // Debug.Log($"Touched UI: {touchedUI.transform.rotation.z}");
+            if (touchedUI.tag == "Arrow")
+            {
+                arrowHandler.nextTileCheck(touchedUI);
+            }
         }
+        else
+        {
+            Debug.Log("No UI object touched.");
+        }
+
 
     }
 }

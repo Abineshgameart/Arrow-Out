@@ -10,7 +10,7 @@
                     "name": "Touch",
                     "type": "Value",
                     "id": "51177179-9dfc-4400-bd55-df50db514a0e",
-                    "expectedControlType": "Touch",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -20,10 +20,10 @@
                 {
                     "name": "",
                     "id": "41f4ad89-537e-42ae-b650-4f444f6c2344",
-                    "path": "<Touchscreen>/primaryTouch",
+                    "path": "<Touchscreen>/primaryTouch/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Android",
                     "action": "Touch",
                     "isComposite": false,
                     "isPartOfComposite": false
