@@ -7,6 +7,7 @@ public class ArrowHandler : MonoBehaviour
 {
     // Private
     private GameManager gameManager;
+    private AudioManager audioManager;
 
     private Vector3 arrowTilePosition;
     private float arrowTileRotationZ;
@@ -19,6 +20,7 @@ public class ArrowHandler : MonoBehaviour
 
     private void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         gameManager = GetComponent<GameManager>();
     }
 
@@ -30,25 +32,21 @@ public class ArrowHandler : MonoBehaviour
         if (arrowTileRotationZ == 1)
         {
             // LEFT
-            Debug.Log("Left");
             RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x - gameManager.nextTileDist, arrowTilePosition.y, arrowTilePosition.z));
         }
         else if (arrowTileRotationZ > 0.70)
         {
             // UP
-            Debug.Log("Up");
             RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x, arrowTilePosition.y + gameManager.nextTileDist, arrowTilePosition.z));
         }
         else if (arrowTileRotationZ == 0)
         {
             // RIGHT
-            Debug.Log("right");
             RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x + gameManager.nextTileDist, arrowTilePosition.y, arrowTilePosition.z));
         }
         else if (arrowTileRotationZ < 0)
         {
             // DOWN
-            Debug.Log("Down");
             RayCastingNextTile(arrowTile, new Vector3(arrowTilePosition.x, arrowTilePosition.y - gameManager.nextTileDist, arrowTilePosition.z));
         }
 
@@ -71,7 +69,6 @@ public class ArrowHandler : MonoBehaviour
         if (results.Count > 0)
         {
             GameObject nextTileArrow = results[0].gameObject;
-            Debug.Log($"Touched UI: {nextTileArrow.tag}");
 
             if (nextTileArrow.tag == "Tile")
             {
@@ -79,6 +76,7 @@ public class ArrowHandler : MonoBehaviour
             }
             else
             {
+                audioManager.PlaySFX(audioManager.wroungArrowClick);
                 arrowImg = arrowTile.GetComponent<Image>();
                 arrowImg.color = Color.red;
             }
@@ -92,8 +90,6 @@ public class ArrowHandler : MonoBehaviour
         currentArrowTile.SetActive(false);
         gameManager = GetComponent<GameManager>();
         gameManager.numberOfTiles--;
-
-        Debug.Log(gameManager.numberOfTiles);
 
         if (gameManager.numberOfTiles == 0)
         {

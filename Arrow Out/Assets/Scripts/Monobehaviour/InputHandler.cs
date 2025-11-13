@@ -6,15 +6,17 @@ using UnityEngine.InputSystem;
 public class InputHandler : MonoBehaviour
 {
     // Public
-    public InputActionAsset inputActions;
-    
+    public InputActionAsset inputActions;  // Getting Input Action
+
 
     // Private
+    private AudioManager audioManager; 
     private InputAction touchPressAction;
     private ArrowHandler arrowHandler;
 
     private void Awake()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         arrowHandler = GetComponent<ArrowHandler>();
         touchPressAction = inputActions.FindActionMap("TouchActionMap").FindAction("Touch");
     }
@@ -52,6 +54,7 @@ public class InputHandler : MonoBehaviour
             // Debug.Log($"Touched UI: {touchedUI.transform.rotation.z}");
             if (touchedUI.tag == "Arrow")
             {
+                audioManager.PlaySFX(audioManager.arrowClick);
                 arrowHandler.nextTileCheck(touchedUI);
             }
         }
