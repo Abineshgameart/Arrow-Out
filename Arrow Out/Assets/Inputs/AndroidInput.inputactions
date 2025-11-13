@@ -1,0 +1,41 @@
+{
+    "version": 1,
+    "name": "AndroidInput",
+    "maps": [
+        {
+            "name": "TouchActionMap",
+            "id": "f1002d35-0e71-4a70-891f-fd11cef176ac",
+            "actions": [
+                {
+                    "name": "Touch",
+                    "type": "Value",
+                    "id": "51177179-9dfc-4400-bd55-df50db514a0e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "41f4ad89-537e-42ae-b650-4f444f6c2344",
+                    "path": "<Touchscreen>/primaryTouch/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Android",
+                    "action": "Touch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Android",
+            "bindingGroup": "Android",
+            "devices": []
+        }
+    ]
+}
