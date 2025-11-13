@@ -251,6 +251,7 @@ public class GameManager : MonoBehaviour
         audioManager.PlaySFX(audioManager.levelFail);
         losePanelUI.SetActive(true);
         timerStatus = false;
+        interstitialAds.ShowAd();
     }
 
     //Method to Enable the Final Lv.5 Cleared Congratulation panel
